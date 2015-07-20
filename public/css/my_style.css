@@ -1,0 +1,22 @@
+body{
+	font-family: 'Abel', sans-serif;
+}
+
+#titre {
+	font-family: 'Pacifico', sans-serif;
+}
+
+img.avatar {
+	width: 400px;
+	height: 400px;
+}
+
+div#pnj,
+div#enigme,
+div#url,
+div#item,
+div#items,
+div#characters {
+	visibility: hidden;
+	display: none;
+}
