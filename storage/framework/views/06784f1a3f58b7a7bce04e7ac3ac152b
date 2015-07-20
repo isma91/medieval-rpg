@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Medieval RPG</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="Entrez dans un monde dédieval et faites des quetes merveilleuses !!" />
+    <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <?php echo Html::style('css/bootstrap.min.css'); ?>
+
+    <?php echo Html::style('css/bootstrap-theme.min.css'); ?>
+
+    <?php echo Html::style('css/bootstrap.css.map'); ?>
+
+    <?php echo Html::style('css/bootstrap-theme.css.map'); ?>
+
+    <?php echo Html::style('css/round-about.css'); ?>
+
+    <?php echo Html::style('css/my_style.css'); ?>
+
+    <?php echo Html::script('js/jquery-2.1.3.js'); ?>
+
+    <?php echo Html::script('js/bootstrap.min.js'); ?>
+
+    <!--[if lt IE 9]>
+<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+ <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <?php if (Auth::user()->droit == 'player') {
+                ?>
+                <a class="navbar-brand" href="panelPlayer" id="titre">Medieval RPG</a>
+                <?php
+            }
+            if (Auth::user()->droit == 'master') {
+                ?>
+                <a class="navbar-brand" href="panelMaster" id="titre">Medieval RPG</a>
+                <?php
+            } ?>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#">Participer Quêtes</a>
+                </li>
+                <li>
+                    <a href="#">Quêtes déjà faites</a>
+                </li>
+                <li>
+                    <a href="#">Equipement</a>
+                </li>
+                <li>
+                    <a href="itemAndPNJ">PNJ et items généraux</a>
+                </li>
+                <li>
+                    <a href="profilPlayer">Profil</a>
+                </li>
+                <li>
+                    <a href="deco">Déconnexion</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <?php
+    if (Session::has('messagePass')) {
+        ?>
+        <div class="alert alert-success"><?php echo Session::get('messagePass'); ?></div>
+        <?php
+    }
+    if (Session::has('messageOldPass')) {
+        ?>
+        <div class="alert alert-danger"><?php echo Session::get('messageOldPass'); ?></div>
+        <?php
+    }
+    if (Session::has('messageNewPass')) {
+        ?>
+        <div class="alert alert-danger"><?php echo Session::get('messageNewPass'); ?></div>
+        <?php
+    }
+    if (Session::has('messageDejaCo')) {
+        ?>
+        <div class="alert alert-warning" role="alert"><?php echo Session::get('messageDejaCo'); ?></div>
+        <?php
+    }
+    if (Session::has('messageUpdateUserUsername')) {
+        ?>
+        <div class="alert alert-danger" role="alert"><?php echo Session::get('messageUpdateUserUsername'); ?></div>
+        <?php
+    }
+    if (Session::has('messageUpdateUser')) {
+        ?>
+        <div class="alert alert-success" role="alert"><?php echo Session::get('messageUpdateUser'); ?></div>
+        <?php
+    }
+    if (Session::has('messagePasImage')) {
+        ?>
+        <div class="alert alert-success" role="alert"><?php echo Session::get('messagePasImage'); ?></div>
+        <?php
+    }
+    ?>
+</div>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Bienvenue <?php echo Auth::user()->lastname;?> <?php echo Auth::user()->name;?> !!</h1>
+        <?php if (Auth::user()->picture == null) {
+            ?>
+            <img class="img-circle img-responsive img-center avatar" src="http://placehold.it/200x200" alt="no avatar">
+            <?php
+        } else {
+            ?>
+            <img class="img-circle img-responsive img-center avatar" src="<?php echo url(); ?>/avatar/<?php echo Auth::user()->picture; ?>" alt="avatar">
+            <?php
+        }
+        ?>
+        <p>Vous pouvez changer votre profil selon vos envies !!</p>
+        <?php echo Form::open(['url' => 'updateProfilUser', 'files'=>true]); ?>
+
+        <div class="form-group">
+            <?php echo Form::label('name', 'Votre Nom :'); ?>
+
+            <?php echo Form::text('name', Auth::user()->name, ['class' => 'form-control', 'placeholder' => 'Votre nom']); ?>
+
+        </div>
+        <div class="form-group">
+            <?php echo Form::label('lastname', 'Votre Prenom :'); ?>
+
+            <?php echo Form::text('lastname', Auth::user()->lastname, ['class' => 'form-control', 'placeholder' => 'Votre prenom']); ?>
+
+        </div>
+        <div class="form-group">
+            <?php echo Form::label('birthdate', 'Votre Date de naissance :'); ?>
+
+            <?php echo Form::input('date', 'birthdate', Auth::user()->birthdate, ['class' => 'form-control']); ?>
+
+        </div>
+        <div class="form-group">
+            <?php echo Form::label('email', 'Votre Email :'); ?>
+
+            <?php echo Form::email('email', Auth::user()->email, ['class' => 'form-control']); ?>
+
+        </div>
+        <div class="form-group">
+            <?php echo Form::label('file', 'Avatar  :'); ?>
+
+            <?php echo Form::input('file', 'file', null, ['class' => 'form-control']); ?>
+
+        </div>
+        <div class="form-group">
+            <?php echo Form::submit('Modifier votre profil', ['class' => 'btn btn-primary form-control']); ?>
+
+        </div>
+        <?php echo Form::close(); ?>
+
+        <?php echo Form::open(['url' => 'updateUserPass']); ?>
+
+        <div class="form-group">
+            <?php echo Form::label('oldPassword', 'Ancien Mot de passe :'); ?>
+
+            <input type="password" name="oldPassword" class="form-control" id="oldPassword" placeholder="MINIMUM 5 CHARACTERES" />
+        </div>
+        <div class="form-group">
+            <?php echo Form::label('newPassword', 'Nouveau Mot de passe :'); ?>
+
+            <input type="password" name="newPassword" class="form-control" id="newPassword" placeholder="MINIMUM 5 CHARACTERES" />
+        </div>
+        <div class="form-group">
+            <?php echo Form::submit('Modifier votre mot de passe', ['class' => 'btn btn-primary form-control']); ?>
+
+        </div>
+        <?php echo Form::close(); ?>
+
+    </div>
+</div>
+</body>
+</html>

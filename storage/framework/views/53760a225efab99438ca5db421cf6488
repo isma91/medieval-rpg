@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Medieval RPG</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="Entrez dans un monde dédieval et faites des quetes merveilleuses !!" />
+    <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <?php echo Html::style('css/bootstrap.min.css'); ?>
+
+    <?php echo Html::style('css/bootstrap-theme.min.css'); ?>
+
+    <?php echo Html::style('css/bootstrap.css.map'); ?>
+
+    <?php echo Html::style('css/bootstrap-theme.css.map'); ?>
+
+    <?php echo Html::style('css/round-about.css'); ?>
+
+    <?php echo Html::style('css/my_style.css'); ?>
+
+    <?php echo Html::script('js/jquery-2.1.3.js'); ?>
+
+    <?php echo Html::script('js/bootstrap.min.js'); ?>
+
+    <?php echo Html::script('js/pnj.js'); ?>
+
+    <!--[if lt IE 9]>
+<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+ <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <?php if (Auth::user()->droit == 'player') {
+                ?>
+                <a class="navbar-brand" href="panelPlayer" id="titre">Medieval RPG</a>
+                <?php
+            }
+            if (Auth::user()->droit == 'master') {
+                ?>
+                <a class="navbar-brand" href="panelMaster" id="titre">Medieval RPG</a>
+                <?php
+            } ?>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="goQuete">Participer Quêtes</a>
+                </li>
+                <li>
+                    <a href="#">Quêtes déjà faites</a>
+                </li>
+                <li>
+                    <a href="equipement">Equipement</a>
+                </li>
+                <li>
+                    <a href="addPersonnage">Créer personnage</a>
+                </li>
+                <li>
+                    <a href="itemAndPNJ">PNJ et items généraux</a>
+                </li>
+                <li>
+                    <a href="profilPlayer">Profil</a>
+                </li>
+                <li>
+                    <a href="deco">Déconnexion</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <?php
+    if (Session::has('messageDejaCo')) {
+        ?>
+        <div class="alert alert-warning" role="alert"><?php echo Session::get('messageDejaCo'); ?></div>
+        <?php
+    }
+    if (Session::has('messageMauvaiseReponse')) {
+        ?>
+        <div class="alert alert-warning" role="alert"><?php echo Session::get('messageMauvaiseReponse'); ?></div>
+        <?php
+    }
+    ?>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Master <?php echo Auth::user()->name; ?> <?php echo Auth::user()->lastname; ?>
+
+                <small>Level <?php echo Auth::user()->level; ?></small>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 id="play"></h3>
+            <h2 class="page-header">Choisissez votre type de dégas (physique ou magique) ATTENTION ! SI VOUS AVEZ 0 EN MAGIQUE OU PHSIQUE ET QUE VOUS CHOISISSEZ CE TYPE, VOUS NE FERRAIS AUCUN DEGAS !!</h2>
+        </div>
+        <?php
+        foreach ($pnj as $value) {
+            ?>
+            <div class="col-lg-4 col-sm-6 text-center">
+                <?php if ($value->picture == null) {
+                    ?>
+                    <img class="img-circle img-responsive img-center avatar" src="http://placehold.it/200x200" alt="no picture yet !!">
+                    <?php
+                } else {
+                    ?>
+                    <img class="img-circle img-responsive img-center avatar" src="<?php echo url(); ?>/avatarPNJ/<?php echo $value->picture; ?>" alt="$value->name">
+                    <?php
+                } ?>
+                <h3><?php echo $value->name; ?>
+                    <small>Level : <?php echo $value->level ?></small>
+                </h3>
+                <h2>Point de Vie : <span id="HPPNJ"><?php echo $value->HP; ?></span></h2>
+                <h2>Dégats Physiques : <span id="ADPNJ"><?php echo $value->AD; ?></span></h2>
+                <h2>Dégats Magiques : <span id="APPNJ"><?php echo $value->AP; ?></span></h2>
+                <h2>Armure : <span id="armorPNJ"><?php echo $value->armor; ?></span></h2>
+                <h2>Résistances Magiques : <span id="MRPNJ"><?php echo $value->MR; ?></span></h2>
+                <h2>Pénétration Armure : <span id="peneArmorPNJ"><?php echo $value->peneArmor; ?></span></h2>
+                <h2>Pénétration Magiques : <span id="peneMRPNJ"><?php echo $value->peneMR; ?></span></h2>
+            </div>
+            <?php
+        }
+        ?>
+        <?php
+        foreach ($personnage as $value) {
+            ?>
+            <div class="col-lg-6 col-sm-10 text-center">
+                <?php if ($value->picture == null) {
+                    ?>
+                    <img class="img-circle img-responsive img-center avatar" src="http://placehold.it/200x200" alt="no picture yet !!">
+                    <?php
+                } else {
+                    ?>
+                    <img class="img-circle img-responsive img-center avatar" src="<?php echo url(); ?>/avatarPersonnage/<?php echo $value->picture; ?>" alt="$value->name">
+                    <?php
+                } ?>
+                <h3><?php echo $value->name; ?>
+                    <small>Level : <?php echo $value->level ?></small>
+                </h3>
+                <h2>Point de Vie : <span id="HPPerso"><?php echo $value->HP; ?></span></h2>
+                <h2>Dégats Physiques : <span id="ADPerso"><?php echo $value->AD; ?></span></h2>
+                <h2>Dégats Magiques : <span id="APPerso"><?php echo $value->AP; ?></span></h2>
+                <h2>Armure : <span id="armorPerso"><?php echo $value->armor; ?></span></h2>
+                <h2>Résistances Magiques : <span id="MRPerso"><?php echo $value->MR; ?></span></h2>
+                <h2>Pénétration Armure : <span id="peneArmorPerso"><?php echo $value->peneArmor; ?></span></h2>
+                <h2>Pénétration Magiques : <span id="peneMRPerso"><?php echo $value->peneMR; ?></span></h2>
+            </div>
+            <?php
+        }
+        ?>
+    </div>
+    <!--<?php echo Form::open(['url' => 'attaque']); ?>-->
+    <div class="form-group">
+        <?php echo Form::label('degas', 'Choisissez votre attaque :'); ?>
+
+        <select class="form-control" id="degas" name="degas">
+            <?php foreach ($personnage as $value): ?>
+                <option value="AD">Attaque physique</option>
+                <option value="AP">Attaque magique</option>
+            <?php endforeach ?>
+        </select>
+    </div>
+    <input type="hidden" id="etape" name="etape" value="<?php echo $currentEtape; ?>">
+    <input type="hidden" id="quete" name="quete" value="<?php echo $currentQuete; ?>">
+    <input type="hidden" id="personnage" name="personnage" value="<?php echo $personnage[0]->id; ?>">
+    <div class="form-group">
+        <?php echo Form::submit('Attaque !!', ['class' => 'btn btn-primary form-control', 'id' => 'attaque']); ?>
+
+    </div>
+    <?php echo Form::close(); ?>
+
+</div>
+</body>
+</html>
